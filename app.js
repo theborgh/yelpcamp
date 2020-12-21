@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const Campground = require("./models/campground");
+const { runInNewContext } = require("vm");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -28,6 +29,11 @@ app.get("/", (req, res) => {
 app.get("/campgrounds", async (req, res) => {
   const campgrounds = await Campground.find({});
   res.status(200).render("campgrounds/index", { campgrounds });
+});
+
+app.get("/campgrounds/:id", async (req, res) => {
+  const campground = await Campground.findById(req.params.id);
+  res.status(200).render("campgrounds/show", { campground });
 });
 
 app.listen(3000, () => {
