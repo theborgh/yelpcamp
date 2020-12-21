@@ -25,7 +25,7 @@ const seedDB = async () => {
     const rand = Math.floor(Math.random() * 1000);
     const c = new Campground({
       location: `${cities[rand].city}, ${cities[rand].state}`,
-      description: `${descriptors[rand % descriptors.length]} ${
+      title: `${descriptors[rand % descriptors.length]} ${
         places[rand % places.length]
       }`,
     });
@@ -33,4 +33,4 @@ const seedDB = async () => {
   }
 };
 
-seedDB().then(db.close());
+seedDB();
