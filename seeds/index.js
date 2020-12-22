@@ -2,6 +2,16 @@ const mongoose = require("mongoose");
 const Campground = require("../models/campground");
 const cities = require("./cities");
 const { places, descriptors } = require("./seedHelpers");
+let envHelpers;
+
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+  console.log("dotenv required");
+}
+
+if (process.env.LOAD_RANDOM_IMG) {
+  envHelpers = require("../env/pickRandomImg");
+}
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -16,10 +26,7 @@ db.once("open", () => {
 });
 
 const seedDB = async () => {
-  await Campground.deleteMany({});
-
-  //   const c = new Campground({ title: "testing the connection" });
-  //   await c.save();
+  await Campground.deleteMany({}); // delete all
 
   for (let i = 0; i < 30; i++) {
     const rand = Math.floor(Math.random() * 1000);
@@ -28,7 +35,9 @@ const seedDB = async () => {
       title: `${descriptors[rand % descriptors.length]} ${
         places[rand % places.length]
       }`,
-      image: "https://source.unsplash.com/collection/483251",
+      image: process.env.LOAD_RANDOM_IMG
+        ? envHelpers.pickRandomImg()
+        : "https://source.unsplash.com/collection/483251",
       description:
         "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
       price: Math.floor(Math.random() * 30) + 10,
