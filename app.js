@@ -3,6 +3,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
 const Campground = require("./models/campground");
+const Review = require("./models/review");
 const methodOverride = require("method-override");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
@@ -19,7 +20,7 @@ const app = express();
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", () => {
-  console.log("database was connected");
+  console.log("database is connected");
 });
 
 app.engine("ejs", ejsMate);
@@ -104,6 +105,20 @@ app.delete(
     await Campground.findByIdAndDelete(id);
 
     res.redirect("/campgrounds");
+  })
+);
+
+app.post(
+  "/campgrounds/:id/reviews",
+  catchAsync(async (req, res, next) => {
+    const cg = await Campground.findById(req.params.id);
+    const review = new Review(req.body.review);
+
+    cg.reviews.push(review);
+    await review.save();
+    await cg.save();
+
+    res.redirect(`/campgrounds/${cg.id}`);
   })
 );
 
