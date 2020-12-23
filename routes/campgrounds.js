@@ -46,7 +46,13 @@ router.get(
     const campground = await await Campground.findById(req.params.id).populate(
       "reviews"
     );
-    res.status(200).render("campgrounds/show", { campground });
+
+    if (!campground) {
+      req.flash("error", "Campground is not available");
+      res.redirect("/campgrounds");
+    } else {
+      res.status(200).render("campgrounds/show", { campground });
+    }
   })
 );
 
