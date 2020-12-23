@@ -28,6 +28,7 @@ router.post(
     await review.save();
     await cg.save();
 
+    req.flash("success", "Review created");
     res.redirect(`/campgrounds/${cg.id}`);
   })
 );
@@ -40,6 +41,7 @@ router.delete(
     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // $pull operator from Mongo
     await Review.findByIdAndDelete(reviewId);
 
+    req.flash("success", "Review deleted");
     res.redirect(`/campgrounds/${id}`);
   })
 );

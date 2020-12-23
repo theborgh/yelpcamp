@@ -35,6 +35,7 @@ router.post(
     const campground = new Campground(req.body.campground);
     await campground.save();
 
+    req.flash("success", "Successfully created a new campground");
     res.redirect(`/campgrounds/${campground._id}`);
   })
 );
@@ -66,6 +67,7 @@ router.put(
       ...req.body.campground,
     });
 
+    req.flash("success", "Campground was updated");
     res.redirect(`/campgrounds/${campground._id}`);
   })
 );
@@ -76,6 +78,7 @@ router.delete(
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
 
+    req.flash("success", "Campground was deleted");
     res.redirect("/campgrounds");
   })
 );
