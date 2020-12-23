@@ -28,7 +28,7 @@ db.once("open", () => {
 const seedDB = async () => {
   await Campground.deleteMany({}); // delete all
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 50; i++) {
     const rand = Math.floor(Math.random() * 1000);
     const c = new Campground({
       location: `${cities[rand].city}, ${cities[rand].state}`,
@@ -39,7 +39,7 @@ const seedDB = async () => {
         ? envHelpers.pickRandomImg()
         : "https://source.unsplash.com/collection/483251",
       description:
-        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
+        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem",
       price: Math.floor(Math.random() * 30) + 10,
       reviews: [],
     });
