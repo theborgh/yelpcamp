@@ -3,15 +3,16 @@ const router = express.Router({ mergeParams: true });
 const catchAsync = require("../utils/catchAsync");
 const Campground = require("../models/campground");
 const Review = require("../models/review");
-const { validateReview } = require("../middleware");
+const { validateReview, isLoggedIn } = require("../middleware");
 
 router.post(
   "/",
+  isLoggedIn,
   validateReview,
   catchAsync(async (req, res, next) => {
     const cg = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
-
+    review.author = req.user._id; // add author ID to the review before saving it to DB
     cg.reviews.push(review);
     await review.save();
     await cg.save();
