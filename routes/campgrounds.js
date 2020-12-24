@@ -1,21 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
-const ExpressError = require("../utils/ExpressError");
 const Campground = require("../models/campground");
-const { campgroundSchema } = require("../schemas");
-const { isLoggedIn } = require("../middleware");
 
-const validateCampgroundSchema = (req, res, next) => {
-  const { error } = campgroundSchema.validate(req.body);
-
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(", ");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
+const {
+  isLoggedIn,
+  isAuthor,
+  validateCampgroundSchema,
+} = require("../middleware");
 
 router.get(
   "/",
@@ -49,8 +41,6 @@ router.get(
       .populate("reviews")
       .populate("author");
 
-    console.log(campground);
-
     if (!campground) {
       req.flash("error", "Campground is not available");
       res.redirect("/campgrounds");
@@ -63,17 +53,13 @@ router.get(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
 
     if (!campground) {
       req.flash("error", "Cannot find that campground");
       return res.redirect("/campgrounds");
-    }
-
-    if (!campground.author.equals(req.user._id)) {
-      req.flash("error", "You don't have permission to edit this campground");
-      return res.redirect(`/campgrounds/${campground._id}`);
     }
 
     res.status(200).render("campgrounds/edit", { campground });
@@ -83,15 +69,9 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isAuthor,
   validateCampgroundSchema,
   catchAsync(async (req, res, next) => {
-    const campground = await Campground.findById(req.params.id);
-
-    if (!campground.author.equals(req.user._id)) {
-      req.flash("error", "You don't have permission to edit this campground");
-      return res.redirect(`/campgrounds/${campground._id}`);
-    }
-
     const camp = await Campground.findByIdAndUpdate(req.params.id, {
       ...req.body.campground,
     });
@@ -104,6 +84,7 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);

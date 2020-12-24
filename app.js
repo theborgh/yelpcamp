@@ -74,7 +74,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.status(200).render("home");
-  console.log(req.body);
 });
 
 // to delete
