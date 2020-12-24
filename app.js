@@ -60,6 +60,7 @@ passport.deserializeUser(User.deserializeUser()); // specify how to delete user 
 
 // Middleware to set a variable to flash('success') so it doesn't need to be passed by the route handler
 app.use((req, res, next) => {
+  res.locals.currentUser = req.user; // req.user is given by passport, accessing it helps with authorization/authentication
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
 

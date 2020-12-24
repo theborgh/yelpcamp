@@ -11,17 +11,21 @@ router.get("/register", (req, res) => {
 
 router.post(
   "/register",
-  catchAsync(async (req, res) => {
+  catchAsync(async (req, res, next) => {
     // catch it manually so errors appear in a flash message
 
     try {
       const { email, username, password } = req.body;
 
       const user = new User({ email, username });
-      await User.register(user, password);
-
-      req.flash("success", "Welcome to Yelp Camp!");
-      res.redirect("/campgrounds");
+      const registeredUser = await User.register(user, password);
+      req.login(registeredUser, (err) => {
+        if (err) {
+          return next();
+        }
+        req.flash("success", "Welcome to Yelp Camp!");
+        res.redirect("/campgrounds");
+      });
     } catch (e) {
       console.log(e);
       req.flash("error", e.message);
@@ -45,5 +49,11 @@ router.post(
     res.redirect("/campgrounds");
   }
 );
+
+router.get("/logout", (req, res) => {
+  req.logOut();
+  req.flash("success", "Goodbye");
+  res.redirect("/campgrounds");
+});
 
 module.exports = router;
