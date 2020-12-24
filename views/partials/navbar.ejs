@@ -29,6 +29,9 @@
         <a class="nav-link" href="/login">Login</a>
         <a class="nav-link" href="/register">Sign up</a>
         <% } else { %>
+        <span class="nav-link"
+          >Hello, <strong><%= currentUser.username %></strong>
+        </span>
         <a class="nav-link" href="/logout">Logout</a>
         <% } %>
       </div>
