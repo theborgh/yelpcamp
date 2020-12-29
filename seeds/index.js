@@ -35,9 +35,18 @@ const seedDB = async () => {
       title: `${descriptors[rand % descriptors.length]} ${
         places[rand % places.length]
       }`,
-      image: process.env.LOAD_RANDOM_IMG
-        ? envHelpers.pickRandomImg()
-        : "https://source.unsplash.com/collection/483251",
+      images: [
+        {
+          url:
+            "https://res.cloudinary.com/duttyuznh/image/upload/v1609236640/YelpCamp/mhztsd4tfizefh5obg6i.png",
+          filename: "YelpCamp/mhztsd4tfizefh5obg6i",
+        },
+        {
+          url:
+            "https://res.cloudinary.com/duttyuznh/image/upload/v1609236645/YelpCamp/emcwvd0pc2rpak3hkpcl.png",
+          filename: "YelpCamp/emcwvd0pc2rpak3hkpcl",
+        },
+      ],
       description:
         "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem",
       price: Math.floor(Math.random() * 30) + 10,

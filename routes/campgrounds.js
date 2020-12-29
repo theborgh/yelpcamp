@@ -10,11 +10,16 @@ const {
 
 const campgrounds = require("../controllers/campground");
 
+const multer = require("multer");
+const { storage } = require("../cloudinary");
+const upload = multer({ storage });
+
 router
   .route("/")
   .get(catchAsync(campgrounds.index))
   .post(
     isLoggedIn,
+    upload.array("image"),
     validateCampgroundSchema,
     catchAsync(campgrounds.createCampground)
   );
