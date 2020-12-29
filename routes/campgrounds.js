@@ -32,6 +32,7 @@ router
   .put(
     isLoggedIn,
     isAuthor,
+    upload.array("image"),
     validateCampgroundSchema,
     catchAsync(campgrounds.updateCampground)
   )

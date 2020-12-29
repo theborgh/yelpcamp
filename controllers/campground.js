@@ -59,6 +59,14 @@ module.exports.updateCampground = async (req, res, next) => {
     ...req.body.campground,
   });
 
+  camp.images.push(
+    ...req.files.map((file) => ({
+      url: file.path,
+      filename: file.filename,
+    }))
+  );
+  await camp.save();
+
   req.flash("success", "Campground was updated");
   res.redirect(`/campgrounds/${camp._id}`);
 };
